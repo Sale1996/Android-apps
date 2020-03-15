@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Complex mathematica</string>
+    <string name="app_header">Complex mathematica</string>
+    <string name="header_desc">Click on the bigger number of two given. I know it is hard, but try your best!</string>
+    <string name="score_default">Number of points : 0</string>
+    <string name="strait_wins_default">Strait wins: 0</string>
+</resources>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">GuessANumber</string>
+    <string name="app_tittle">Guess a Number!</string>
+    <string name="app_desc">I am thinking about some number from 1–100, what do you think which one?</string>
+    <string name="button_play_again">play again</string>
+    <string name="app_hint">Play!</string>
+    <string name="input_hint">Enter your number here</string>
+    <string name="finished_game">CONGRATS! You guessed it right with total number of guesses:</string>
+    <string name="hint_lower">Hint: It\'s lower</string>
+    <string name="hint_higher">Hint: It\'s higher</string>
+</resources>
