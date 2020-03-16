@@ -4,4 +4,17 @@
     <string name="header_desc">Click on the bigger number of two given. I know it is hard, but try your best!</string>
     <string name="score_default">Number of points : 0</string>
     <string name="strait_wins_default">Strait wins: 0</string>
+    <string name="choose_trainer">Choose your trainer</string>
+    <string name="image_desc">Image description</string>
+
+    <string-array name="list_of_trainers">
+        <item>Motivational Bane</item>
+        <item>Bane after analiza</item>
+        <item>Chill Katela</item>
+        <item>Not in mood Katela</item>
+        <item>Not bad Lovre</item>
+        <item>Dark Zivko</item>
+        <item>Sale if you are ally</item>
+        <item>Sale if you are horde</item>
+    </string-array>
 </resources>

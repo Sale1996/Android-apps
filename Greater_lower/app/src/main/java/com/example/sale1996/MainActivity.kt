@@ -3,6 +3,7 @@ package com.example.sale1996
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import android.widget.Button
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,6 +17,29 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+        spinner_trainers?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val id = when (position) {
+                    0 -> R.drawable.bane_good
+                    1 -> R.drawable.bane_bad
+                    2 -> R.drawable.katela_good
+                    3 -> R.drawable.katela_bad
+                    4 -> R.drawable.lovre_good
+                    5 -> R.drawable.zivko_bad
+                    6 -> R.drawable.sale_good
+                    else -> R.drawable.sale_bad
+                }
+
+                trainer.setImageResource(id)
+            }
+
+        }
 
         setupEnvironment()
     }

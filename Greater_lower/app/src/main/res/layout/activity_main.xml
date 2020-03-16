@@ -21,11 +21,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <TextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="12dp"
         android:text="@string/header_desc"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,35 +34,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/number_of_points"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.536"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description">
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/left_number"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="106dp"
             android:layout_height="113dp"
             android:background="#B5A4A4"
             android:onClick="buttonClicked"
-            android:textColor="#700000"
-            style="?android:attr/borderlessButtonStyle" />
+            android:textColor="#700000" />
 
         <Button
             android:id="@+id/right_number"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="106dp"
             android:layout_height="113dp"
             android:layout_marginStart="90dp"
             android:background="#969BB3"
             android:onClick="buttonClicked"
-            android:textColor="#003661"
-            style="?android:attr/borderlessButtonStyle" />
+            android:textColor="#003661" />
 
 
     </LinearLayout>
@@ -87,6 +86,41 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/trainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="@string/image_desc"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_trainers"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/bane_bad" />
+
+    <Spinner
+        android:id="@+id/spinner_trainers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:entries="@array/list_of_trainers"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/choose_trainer"
+        app:layout_constraintBottom_toTopOf="@+id/spinner_trainers"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
