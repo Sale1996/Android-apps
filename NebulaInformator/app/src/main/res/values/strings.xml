@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Nebula Informator</string>
+    <string name="title">Nebula Informator</string>
+    <string name="app_desc">Click on Nebula to learn more about it</string>
+
+    //nebulas
+    <string name="blinking_planetary_nebula">blinking planetary nebula</string>
+    <string name="cats_eye_nebula">cats eye nebula</string>
+    <string name="dumbbell_nebula">dumbbell nebula</string>
+    <string name="emission_nebula">emission nebula</string>
+    <string name="eskimo_nebula">eskimo nebula</string>
+    <string name="ghost_of_jupiter_nebula">ghost of jupiter nebula</string>
+    <string name="glowing_eye_nebula">glowing eye nebula</string>
+    <string name="helix_nebula">helix nebula</string>
+    <string name="little_ghost_nebula">little ghost nebula</string>
+    <string name="medusa_nebula">medusa nebula</string>
+    <string name="owl_nebula">owl nebula</string>
+    <string name="ring_nebula">ring nebula</string>
+
+
+</resources>

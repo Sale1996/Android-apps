@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Who said that</string>
+    <string name="app_title">Who said that</string>
+    <string name="default_sentence">Sentence</string>
+    <string name="add_new_word_desc">Enter the new sentence and its narrator</string>
+    <string name="input_sentence">Input sentence</string>
+    <string name="input_narrator">Input narrator</string>
+    <string name="add_pair">Add pair</string>
+    <string name="add_new_pair">Add new pair</string>
 </resources>

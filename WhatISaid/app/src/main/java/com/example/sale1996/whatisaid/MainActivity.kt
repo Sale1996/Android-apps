@@ -1,7 +1,11 @@
 package com.example.sale1996.whatisaid
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
@@ -10,6 +14,8 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity() {
+
+    private val ADD_NEW_SENTENCE_NARRATOR_PAIR = 1
 
     private val narrators = ArrayList<String>()
     private val sentences = ArrayList<String>()
@@ -83,6 +89,30 @@ class MainActivity : AppCompatActivity() {
         }
         else{
             narratorListAdapter.notifyDataSetChanged()
+        }
+    }
+
+
+    fun addNewPairButtonClick(view : View){
+        val newIntent = Intent(this, AddSentenceActivity::class.java)
+        startActivityForResult(newIntent, ADD_NEW_SENTENCE_NARRATOR_PAIR)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK){
+            if(requestCode == ADD_NEW_SENTENCE_NARRATOR_PAIR){
+                if(data != null){
+                    val sentence = data.getStringExtra("sentence")
+                    val narrator = data.getStringExtra("narrator")
+                    Log.i("salepare", "$sentence  $narrator")
+                    sentenceToNarrator[sentence] = narrator
+                    sentences.add(sentence)
+                    narrators.add(narrator)
+                    narratorListAdapter.notifyDataSetChanged()
+                }
+            }
         }
     }
 }
