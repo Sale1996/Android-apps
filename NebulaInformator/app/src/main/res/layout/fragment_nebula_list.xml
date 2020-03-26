@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NebulaListFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+        <TextView
+            android:id="@+id/nebula_informator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/title"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/app_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/app_desc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nebula_informator" />
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scrollbars="none"
+            android:layout_weight="1"
+            app:layout_constraintTop_toBottomOf="@id/app_desc"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TableLayout
+                android:id="@+id/nebula_table"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp">
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <ImageButton
+                        android:layout_width="130dp"
+                        android:layout_height="200dp"
+                        android:contentDescription="@string/app_name"
+                        android:onClick="goToNebulaInfo"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/blinking_planetary_nebula"
+                        android:tag="blinking_planetary_nebula" />
+
+                    <ImageButton
+                        android:layout_width="130dp"
+                        android:layout_height="200dp"
+                        android:contentDescription="@string/app_name"
+                        android:onClick="goToNebulaInfo"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/cats_eye_nebula"
+                        android:tag="cats_eye_nebula" />
+
+                    <ImageButton
+                        android:layout_width="130dp"
+                        android:layout_height="200dp"
+                        android:contentDescription="@string/app_name"
+                        android:onClick="goToNebulaInfo"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/dumbbell_nebula"
+                        android:tag="dumbbell_nebula" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <ImageButton
+                        android:layout_width="130dp"
+                        android:layout_height="200dp"
+                        android:contentDescription="@string/app_name"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/emission_nebula"
+                        android:tag="emission_nebula" />
+
+                    <ImageButton
+                        android:layout_width="130dp"
+                        android:layout_height="200dp"
+                        android:contentDescription="@string/app_name"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/eskimo_nebula"
+                        android:tag="eskimo_nebula" />
+
+                    <ImageButton
+                        android:layout_width="130dp"
+                        android:layout_height="200dp"
+                        android:contentDescription="@string/app_name"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ghost_of_jupiter_nebula"
+                        android:tag="ghost_of_jupiter_nebula" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <ImageButton
+                        android:layout_width="130dp"
+                        android:layout_height="200dp"
+                        android:contentDescription="@string/app_name"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/glowing_eye_nebula"
+                        android:tag="glowing_eye_nebula" />
+
+                    <ImageButton
+                        android:layout_width="130dp"
+                        android:layout_height="200dp"
+                        android:contentDescription="@string/app_name"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/helix_nebula"
+                        android:tag="helix_nebula" />
+
+                    <ImageButton
+                        android:layout_width="130dp"
+                        android:layout_height="200dp"
+                        android:contentDescription="@string/app_name"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/little_ghost_nebula"
+                        android:tag="little_ghost_nebula" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <ImageButton
+                        android:layout_width="130dp"
+                        android:layout_height="200dp"
+                        android:contentDescription="@string/app_name"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/medusa_nebula"
+                        android:tag="medusa_nebula" />
+
+                    <ImageButton
+                        android:layout_width="130dp"
+                        android:layout_height="200dp"
+                        android:contentDescription="@string/app_name"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/owl_nebula"
+                        android:tag="owl_nebula" />
+
+                    <ImageButton
+                        android:layout_width="130dp"
+                        android:layout_height="200dp"
+                        android:contentDescription="@string/app_name"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ring_nebula"
+                        android:tag="ring_nebula" />
+
+                </TableRow>
+
+
+            </TableLayout>
+
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>

@@ -11,24 +11,10 @@ class NebulaDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_nebula_detail)
 
-        if (intent != null){
-
-            val nebulaTag = intent.getStringExtra("nebula_tag") ?: "cats_eye_nebula"
-            setNebulaDetails(nebulaTag)
-        }
-    }
-
-    fun setNebulaDetails(nebulaTag : String){
-
-        val nebulaImageID = resources.getIdentifier(nebulaTag, "drawable", packageName)
-        val nebulaTextFileID = resources.getIdentifier("$nebulaTag"+"_txt", "raw", packageName)
-        val fileText = resources.openRawResource(nebulaTextFileID).bufferedReader().readText()
-
-        nebula_name.text = (nebulaTag.toString().replace("_", " "))
-        nebula_detail_image.setImageResource(nebulaImageID)
-        nebula_detail_desc.text = fileText
 
     }
+
+
 
 
 }
