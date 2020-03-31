@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Random pet picture generator</string>
+    <string name="dog_button_str">get dog pic</string>
+    <string name="cat_button_str">get cat pic</string>
+</resources>
