@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,6 +14,8 @@ import android.widget.NumberPicker;
 import android.widget.Toast;
 
 public class AddNoteActivity extends AppCompatActivity {
+    public static final String EXTRA_ID =
+            "com.example.sale1996.mvvc_pattern_app_java.EXTRA_ID";
     public static final String EXTRA_TITLE =
             "com.example.sale1996.mvvc_pattern_app_java.EXTRA_TITLE";
     public static final String EXTRA_DESCRIPTION =
@@ -39,7 +42,22 @@ public class AddNoteActivity extends AppCompatActivity {
 
         //ovako postavljamo back dugme da ima ikonicu ic_close
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        setTitle("Add Note");
+
+        //Posto na ovom prozoru imamo i mogucnost editovanja, onda cemo da proverimo
+        //nas intent da li u sebi sadrzi ID, ako sadrzi.. onda moramo da namestimo
+        //prozor da bude za EDIT!
+        Intent intent = getIntent();
+
+        if(intent.hasExtra(EXTRA_ID)){
+            setTitle("Edit Note");
+            editTextTitle.setText(intent.getStringExtra(EXTRA_TITLE));
+            editTextDescription.setText(intent.getStringExtra(EXTRA_DESCRIPTION));
+            numberPickerPriority.setValue(intent.getIntExtra(EXTRA_PRIORITY,1));
+
+        }
+        else{
+            setTitle("Add Note");
+        }
     }
 
     private void saveNote(){
@@ -56,6 +74,12 @@ public class AddNoteActivity extends AppCompatActivity {
         data.putExtra(EXTRA_TITLE, title);
         data.putExtra(EXTRA_DESCRIPTION, description);
         data.putExtra(EXTRA_PRIORITY, priority);
+
+        //check if we have id :D
+        int id = getIntent().getIntExtra(EXTRA_ID, -1);
+        if(id != -1){
+            data.putExtra(EXTRA_ID, id);
+        }
 
         setResult(RESULT_OK, data);
         finish();
