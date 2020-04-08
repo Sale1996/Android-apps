@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "636502671605",
+    "firebase_url": "https://sale1996kotlinmessenger.firebaseio.com",
+    "project_id": "sale1996kotlinmessenger",
+    "storage_bucket": "sale1996kotlinmessenger.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:636502671605:android:e71085917ea07debbb45bc",
+        "android_client_info": {
+          "package_name": "com.example.sale1996.kotlin_messenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "636502671605-p8m493k2jan050lhugibbd0msq0k7p4c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6bQUBQ4aKMucq5iz151Gyrux5xKl2CZo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "636502671605-p8m493k2jan050lhugibbd0msq0k7p4c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

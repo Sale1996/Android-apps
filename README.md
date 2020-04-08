@@ -30,11 +30,11 @@ Simple android app made similar in appearance to an application from Stanford 19
 App was used as a tool to learn basic operation with Sql Lite.
 
 # Simplemvvmapp
-Simplified version of android app which uses MVVM pattern. 
+Simplified version of android app which uses MVVM pattern. Used as learning tool.
 Credits to: https://www.youtube.com/watch?v=d7UxPYxgBoA
 
 # Mvvcpatternappjava
-Note management app made with java language in mvvm pattern.
+Note management app made with java language in mvvm pattern. Used as learning tool.
 Credits to: https://www.youtube.com/watch?v=ARpn-1FPNE4&list=PLrnPJCHvNZuDihTpkRs6SpZhqgBqPU118&index=1
 
 
