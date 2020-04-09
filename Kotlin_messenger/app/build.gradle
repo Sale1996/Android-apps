@@ -52,5 +52,10 @@ dependencies {
     // Getting a "Could not find" error? Make sure that you've added
     // Google's Maven repository to your root-level build.gradle file
 
+    //FIREBASE STORAGE AND DATABASE
+    implementation 'com.google.firebase:firebase-storage-ktx:19.1.1'
+    implementation 'com.google.firebase:firebase-database-ktx:19.2.1'
 
+    //CIRCLE IMAGE VIEW, ovaj depedency nam omogucuje onaj prikaz slicice
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 }

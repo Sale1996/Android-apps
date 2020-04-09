@@ -37,4 +37,9 @@ Credits to: https://www.youtube.com/watch?v=d7UxPYxgBoA
 Note management app made with java language in mvvm pattern. Used as learning tool.
 Credits to: https://www.youtube.com/watch?v=ARpn-1FPNE4&list=PLrnPJCHvNZuDihTpkRs6SpZhqgBqPU118&index=1
 
+# Kotlin_messenger
+Kotlin messenger is chat app which uses firebase for data management. It includes login and registration of users.
+Used as learning tool.
+Credits to: https://www.youtube.com/watch?v=ihJGxFu2u9Q
+
 
