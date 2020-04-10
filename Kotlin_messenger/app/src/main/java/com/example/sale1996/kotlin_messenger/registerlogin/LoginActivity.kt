@@ -1,7 +1,8 @@
-package com.example.sale1996.kotlin_messenger
+package com.example.sale1996.kotlin_messenger.registerlogin
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sale1996.kotlin_messenger.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 

@@ -2,6 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+//ovo kontam da nije pametno, ovo je uvedeno kako ne bi morali parceable praviti metodu
+//unutar klase koju smo napravili takvom...
+androidExtensions{
+    experimental = true
+}
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -58,4 +63,11 @@ dependencies {
 
     //CIRCLE IMAGE VIEW, ovaj depedency nam omogucuje onaj prikaz slicice
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+
+    //GROUPIE, ovo je library koji nam isporucuje dosta jednostavan ADAPTER za nas recyclerview!
+    implementation "com.xwray:groupie:2.8.0"
+
+    //picasso za slike ovo ono
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }
