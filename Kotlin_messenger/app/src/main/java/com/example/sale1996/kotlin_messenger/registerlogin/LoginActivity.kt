@@ -1,8 +1,11 @@
 package com.example.sale1996.kotlin_messenger.registerlogin
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sale1996.kotlin_messenger.R
+import com.example.sale1996.kotlin_messenger.messages.LatestMessagesActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -18,8 +21,17 @@ class LoginActivity : AppCompatActivity() {
 
             //ovako se vrsi logovanje preko Firebase
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-//                .addOnCompleteListener()
-//                .a
+                .addOnCompleteListener {
+                    if (!it.isSuccessful) return@addOnCompleteListener
+
+                    val intent = Intent(this, LatestMessagesActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Login failed: ${it.message}", Toast.LENGTH_LONG).show()
+                }
+
         }
 
         back_to_register_login.setOnClickListener {

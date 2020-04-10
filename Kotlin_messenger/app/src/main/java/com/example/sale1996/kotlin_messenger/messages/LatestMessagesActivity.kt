@@ -6,17 +6,41 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.example.sale1996.kotlin_messenger.R
+import com.example.sale1996.kotlin_messenger.models.User
 import com.example.sale1996.kotlin_messenger.registerlogin.RegisterActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class LatestMessagesActivity : AppCompatActivity() {
+
+    companion object{
+        var currentUser: User? = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_latest_messages)
 
+        fetchCurrentUser()
         //prvo cemo da proverimo da li je korisnik ulogovan, ako nije bacamo ga na login ili register screen
         verifyUserIsLogged()
+    }
+
+    private fun fetchCurrentUser(){
+        val uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+        ref.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(p0: DataSnapshot) {
+                //ovde cim se nesto imeni i prvi put kad dobijemo vrednost updejtamo companion object..
+                currentUser = p0.getValue(User::class.java)
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+            }
+        })
     }
 
     private fun verifyUserIsLogged(){

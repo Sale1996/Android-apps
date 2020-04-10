@@ -20,13 +20,16 @@ android:layout_marginBottom="8dp">
     app:layout_constraintStart_toEndOf="@+id/image_view_to_user_row"
     app:layout_constraintTop_toTopOf="@+id/image_view_to_user_row" />
 
-<ImageView
+<de.hdodenhof.circleimageview.CircleImageView
     android:id="@+id/image_view_to_user_row"
     android:layout_width="50dp"
     android:layout_height="50dp"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
+    app:civ_border_width="2dp"
+    app:civ_border_color="@android:color/white"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     app:srcCompat="@android:drawable/btn_star_big_on" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
