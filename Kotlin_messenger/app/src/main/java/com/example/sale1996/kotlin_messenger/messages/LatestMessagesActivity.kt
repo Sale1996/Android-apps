@@ -5,14 +5,20 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.sale1996.kotlin_messenger.R
+import com.example.sale1996.kotlin_messenger.models.ChatMessage
 import com.example.sale1996.kotlin_messenger.models.User
 import com.example.sale1996.kotlin_messenger.registerlogin.RegisterActivity
+import com.example.sale1996.kotlin_messenger.views.LatestMessageRow
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.Item
+import kotlinx.android.synthetic.main.activity_latest_messages.*
+import kotlinx.android.synthetic.main.latest_message_row.view.*
 
 class LatestMessagesActivity : AppCompatActivity() {
 
@@ -20,14 +26,72 @@ class LatestMessagesActivity : AppCompatActivity() {
         var currentUser: User? = null
     }
 
+    val adapter = GroupAdapter<GroupieViewHolder>();
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_latest_messages)
+
+        recyclerview_latest_messages.adapter = adapter
+        //dodavanje vertikalne linije izmedju 2 elementa
+        recyclerview_latest_messages.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+
+        //dodavanje lisenera na adapter
+        adapter.setOnItemClickListener { item, view ->
+            val intent = Intent(this, ChatLogActivity::class.java)
+
+            //dodavanje usera
+            val row = item as LatestMessageRow
+            intent.putExtra(NewMessageActivity.USER_KEY, row.chatPartnerUser)
+            startActivity(intent)
+        }
+
+        listenForLatestMessages()
 
         fetchCurrentUser()
         //prvo cemo da proverimo da li je korisnik ulogovan, ako nije bacamo ga na login ili register screen
         verifyUserIsLogged()
     }
+
+    //pravimo hashmapu koja sadrzi string i chatmessage, kako bi mogli da updejtamo vec postojecu poruku u listi
+    val latestMessagesMap = HashMap<String, ChatMessage>()
+
+    private fun refreshRecyclerViewMessages(){
+        adapter.clear()
+        latestMessagesMap.values.forEach {
+            adapter.add(LatestMessageRow(it))
+        }
+    }
+
+    private fun listenForLatestMessages(){
+        val fromId = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId")
+        ref.addChildEventListener(object: ChildEventListener{
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val chatmessage = p0.getValue(ChatMessage::class.java) ?: return
+                //kljuc je ID latest poruke
+                latestMessagesMap[p0.key!!] = chatmessage
+                refreshRecyclerViewMessages()
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                val chatmessage = p0.getValue(ChatMessage::class.java) ?: return
+                //kljuc je ID latest poruke
+                latestMessagesMap[p0.key!!] = chatmessage
+                refreshRecyclerViewMessages()
+            }
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+            override fun onCancelled(p0: DatabaseError) {
+            }
+        })
+    }
+
+
+
+
 
     private fun fetchCurrentUser(){
         val uid = FirebaseAuth.getInstance().uid

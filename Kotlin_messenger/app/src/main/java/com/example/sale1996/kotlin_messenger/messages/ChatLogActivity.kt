@@ -65,6 +65,8 @@ class ChatLogActivity : AppCompatActivity() {
                         adapter.add(ChatToItem(chatMessage.text, toUser!!))
                     }
                 }
+
+                recyclerview_chat_log.scrollToPosition(adapter.itemCount-1)
             }
 
             override fun onCancelled(p0: DatabaseError) {
@@ -111,6 +113,15 @@ class ChatLogActivity : AppCompatActivity() {
                 recyclerview_chat_log.scrollToPosition(adapter.itemCount-1)
             }
         referenceForToUser.setValue(chatMessage)
+
+        //sada zelimo da dodamo i zadnju poruku u latest message za oba korisnika...Ovo je za
+        //funkcionalnost pocetnog ekrana!
+        val latestMessageRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
+        latestMessageRef.setValue(chatMessage)
+        //isto tako treba nam kopija i za drugog korisnika
+        //to znaci kada se posalje poruka izmedju ova 2 korisnika, oboma se updejtaju vernosti u bazi
+        val latestMessageToRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
+        latestMessageToRef.setValue(chatMessage)
     }
 
 
