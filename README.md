@@ -42,4 +42,8 @@ Kotlin messenger is chat app which uses firebase for data management. It include
 Used as learning tool.
 Credits to: https://www.youtube.com/watch?v=ihJGxFu2u9Q
 
+# fire_messenger
+Kotlin messenger is chat app which uses firebase for data management. It includes login and registration of users with firebase auth-ui. It also uses firebase messenger.
+Used as learning tool.
+Credits to: https://www.youtube.com/watch?v=uB7WeED1d1w&t=753s
 
