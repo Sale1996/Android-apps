@@ -2,18 +2,23 @@ package com.example.sale1996.fire_message
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.example.sale1996.fire_message.service.MyFirebaseInstanceIDService
 import com.example.sale1996.fire_message.util.FirestoreUtil
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.iid.InstanceIdResult
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import org.jetbrains.anko.clearTask
 import org.jetbrains.anko.design.longSnackbar
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.newTask
+
 
 class SignInActivity : AppCompatActivity() {
 
@@ -53,6 +58,14 @@ class SignInActivity : AppCompatActivity() {
                 //firebase datasetu
                 FirestoreUtil.initCurrentUserIfFirstTime {
                     startActivity(intentFor<MainActivity>().newTask().clearTask())
+
+                    //ovde sada kupimo token i prosledjujemo ga u firebase!
+                    FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(
+                        this,
+                        OnSuccessListener<InstanceIdResult> { instanceIdResult ->
+                            val userToken = instanceIdResult.token
+                            MyFirebaseInstanceIDService.addTokenToFirestore(userToken)
+                        })
                     progressDialog.dismiss()
                 }
 

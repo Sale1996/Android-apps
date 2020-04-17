@@ -35,7 +35,7 @@ object FirestoreUtil {
             // Ako korisnika nema u bazi onda ga dodaj
             if(!documentSnapshot.exists()){
                 val newUser = User(FirebaseAuth.getInstance().currentUser?.displayName ?: "",
-                    "",null)
+                    "",null, mutableListOf())
 
                 currentUserDocRef.set(newUser).addOnSuccessListener {
                     // Korisnik uspeesno dodat !!
@@ -158,4 +158,19 @@ object FirestoreUtil {
             .collection("messages")
             .add(message)
     }
+
+    //Firestore chat messenger setup
+    //region FCM, uzimamo sve tokene od ulogovanog korisnika...
+    fun getFCMRegistrationTokens(onComplete: (tokens: MutableList<String>)-> Unit){
+        currentUserDocRef.get().addOnSuccessListener {
+            val user = it.toObject(User::class.java)!!
+            onComplete(user.registrationTokens)
+        }
+    }
+
+    //sada ako hocemo da updejtamo samo jedno polje usera, odnosno tokene
+    fun setFCMRegistrationTokens(registrationTokens: MutableList<String>){
+        currentUserDocRef.update(mapOf("registrationTokens" to registrationTokens))
+    }
+    //endregion FCM
 }
