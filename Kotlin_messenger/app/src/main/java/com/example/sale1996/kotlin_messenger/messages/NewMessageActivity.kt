@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.sale1996.kotlin_messenger.R
 import com.example.sale1996.kotlin_messenger.models.User
+import com.example.sale1996.kotlin_messenger.views.UserItem
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -18,6 +19,10 @@ import kotlinx.android.synthetic.main.user_row_new_message.view.*
 
 class NewMessageActivity : AppCompatActivity() {
 
+    companion object {
+        val USER_KEY = "USER_KEY"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_message)
@@ -26,45 +31,41 @@ class NewMessageActivity : AppCompatActivity() {
 
         fetchUsers()
 
-        //pravimo adapter preko nase 3rd party biblioteke...
-//        val adapter = GroupAdapter<GroupieViewHolder>()
-//
-//        recyclerview_newmessage.adapter = adapter
-    }
-
-    companion object {
-        val USER_KEY = "USER_KEY"
     }
 
     private fun fetchUsers(){
-        //kupimo sve usere
+        // izvlacimo sve korisnike
         val ref = FirebaseDatabase.getInstance().getReference("/users")
         // ovaj listener za razliku od drugih je bolji po pitanju performansi..
         ref.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
-                //iz nekog razloga pravi opet adapter
+                // pravimo adapter preko nase 3rd party biblioteke
                 val adapter = GroupAdapter<GroupieViewHolder>()
 
-
                 p0.children.forEach{
-                    val user = it.getValue(User::class.java) //samo ovo prosledimo i on ga sam konvertuje u prosledjeni tip
+                    // Samo ovo prosledimo i on ga sam konvertuje u prosledjeni tip
+                    // Zbog ovoga smo pravili prazan konstruktor u klasi User
+                    val user = it.getValue(User::class.java)
                     if(user != null){
                         adapter.add(UserItem(user))
                     }
                 }
 
-                //hajde da dodamo item click lisener na nas adapter za svaki item
+                // Hajde da dodamo item click lisener na nas adapter za svaki item
                 adapter.setOnItemClickListener { item, view ->
-                    // ovde ne mozemo odma this, nego moramo preko view-a pristupiti nasem activitiju
+                    // Ovde ne mozemo odma this, nego moramo preko view-a pristupiti nasem activitiju
                     val intent = Intent(view.context, ChatLogActivity::class.java)
-                    // ovde cemo da prosledjujemo korisnika koga smo kliknuli
-                    val userItem = item as UserItem //to je kliknuto...
+
+                    val userItem = item as UserItem
                     intent.putExtra(USER_KEY, userItem.user)
 
                     startActivity(intent)
 
-                    finish() //sa ovom linijom ako odemo back od onog chat-a on automatski zavrsava
-                    //i sa ovom aktivnoscu, pa se vraca na main prozor odnosno naredni back...
+                    finish()
+                    /*
+                    * Kada se zavrsi aktivnost koju smo startovali "ChatLogActivity", sa ovim smo rekli cim dodje ovde
+                    * finish() on umesto da prikaze ovu aktivnost prikazace pocetni prozor...
+                    *  */
                 }
 
                 recyclerview_newmessage.adapter = adapter
@@ -78,18 +79,4 @@ class NewMessageActivity : AppCompatActivity() {
 
 }
 
-//Ovde definisemo klasu koju ce Groupie adapter koristiti...
-class UserItem(val user: User): Item<GroupieViewHolder>() {
-    override fun getLayout(): Int {
-        //ovde povezujemo layout za nas adapter..
-        return R.layout.user_row_new_message
-    }
 
-    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        //ovde prosledjenog ussera bindamo za elemente layouta koji smo prosledili..
-        viewHolder.itemView.username_textview_new_message.text = user.username
-
-        Picasso.get().load(user.profileImageUrl).into(viewHolder.itemView.user_circle_image_view_new_message)
-    }
-
-}

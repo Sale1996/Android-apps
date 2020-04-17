@@ -7,6 +7,8 @@ import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sale1996.kotlin_messenger.models.ChatMessage
 import com.example.sale1996.kotlin_messenger.models.User
+import com.example.sale1996.kotlin_messenger.views.ChatFromItem
+import com.example.sale1996.kotlin_messenger.views.ChatToItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -23,7 +25,6 @@ import kotlinx.android.synthetic.main.chat_to_user_row.view.*
 class ChatLogActivity : AppCompatActivity() {
 
     val adapter = GroupAdapter<GroupieViewHolder>()
-
     var toUser : User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,13 +33,13 @@ class ChatLogActivity : AppCompatActivity() {
 
         recyclerview_chat_log.adapter = adapter
 
+        // uzimamo user objekat iz intenta
         toUser = intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY)
         supportActionBar?.title = toUser?.username
 
         listenForMessages()
 
         send_button_chat_log.setOnClickListener {
-            //ovde saljemo poruku
             performSendMessage()
         }
     }
@@ -46,16 +47,21 @@ class ChatLogActivity : AppCompatActivity() {
     private fun listenForMessages(){
         val fromId = FirebaseAuth.getInstance().uid
         val toId = toUser?.uid
-        Log.d("sale-pare", "FromId: $fromId , TOID: $toId")
+
         val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId")
 
-        //ovaj listener kaze addChild event znaci ukoliko se doda dete cvor u cvoru "/messages"
-        //pokrenuce se ovaj lisener
+        /*
+        * Ovaj listener kaze addChild event znaci ukoliko se doda dete cvor u cvoru "/messages",
+        * pokrenuce se ovaj lisener
+        * */
         ref.addChildEventListener(object: ChildEventListener{
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                //ovde kupimo novododatu poruku
+                // ovde kupimo novododatu poruku
                 val chatMessage = p0.getValue(ChatMessage::class.java)
 
+                /*
+                * Preko ovoga znamo koji view za row da koristimo (korisnicki ili nas) (levo ili desno poravnan)
+                * */
                 if(chatMessage != null){
                     if(chatMessage.fromId == FirebaseAuth.getInstance().uid){
                         val currentUser = LatestMessagesActivity.currentUser
@@ -85,41 +91,45 @@ class ChatLogActivity : AppCompatActivity() {
     }
 
     private fun performSendMessage(){
-        //ovde saljemo poruku do firebase-a
-        //ovde pravimo referencu na novonastali objekat (obrati paznju sa push smo napravili novi objekat)
-//        val reference = FirebaseDatabase.getInstance().getReference("/messages").push()
-
+        /*
+        * Ovde saljemo poruku do firebase-a
+        * Pravimo referencu na novonastali objekat (obrati paznju sa push smo napravili novi objekat)
+        * val reference = FirebaseDatabase.getInstance().getReference("/messages").push()
+        * */
         val text = edittext_chat_log.text.toString()
         val fromId = FirebaseAuth.getInstance().uid
         val toUser = intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY)
         val toId = toUser.uid
         val systemCurrentTimeSeconds = System.currentTimeMillis()/1000
-        // ovakva organizacija cvorova u firebase nam daje vecu zastitu za poruke...
-        // jer onda korisnik moze pokupiti samo podatke koje su za nejga vezani
-        // nece praviti upit pa kupiti sve poruke pa gledati koje su njegove...
+
+        if(fromId == null) return //zastita
+        /*
+        * ovakva organizacija cvorova u !!firebase!! nam daje vecu zastitu za poruke
+        * jer onda korisnik moze pokupiti samo podatke koje su za nejga vezani
+        * nece praviti upit pa kupiti sve poruke pa gledati koje su njegove
+        * */
         val reference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
         val referenceForToUser = FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
 
 
-        if(fromId == null) return //zastita
-
         val chatMessage = ChatMessage(reference.key!!, text, fromId, toId, systemCurrentTimeSeconds)
-        //insertujemo poruku u firebase....
+        // insertujemo poruku u firebase za OBA korisnika
         reference.setValue(chatMessage)
             .addOnSuccessListener {
-                //ovde cemo da obrisemo tekst u edit textu kada se posalje poruka
                 edittext_chat_log.text.clear()
-                // sada ova sledeca linija kaze da skrolamo na sam kraj recyclerviewa kada posaljemo poruku
                 recyclerview_chat_log.scrollToPosition(adapter.itemCount-1)
             }
         referenceForToUser.setValue(chatMessage)
 
-        //sada zelimo da dodamo i zadnju poruku u latest message za oba korisnika...Ovo je za
-        //funkcionalnost pocetnog ekrana!
+        /*
+        * Sada zelimo da dodamo zadnju poruku izmedju korisnika u objekat latest_message za OBA
+        * korisnika. (ovo je potrebno za funkcionalnost na pocetnom ekranu...)
+        * Primetiti da se objekti updejtaju, ne dodavaju novi (jer je samo jedan objekat potreban
+        * za oba korisnika, koji je vezan za njihovu komunikaciju)
+        * */
+
         val latestMessageRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
         latestMessageRef.setValue(chatMessage)
-        //isto tako treba nam kopija i za drugog korisnika
-        //to znaci kada se posalje poruka izmedju ova 2 korisnika, oboma se updejtaju vernosti u bazi
         val latestMessageToRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
         latestMessageToRef.setValue(chatMessage)
     }
@@ -127,29 +137,4 @@ class ChatLogActivity : AppCompatActivity() {
 
 }
 
-class ChatFromItem(val message: String, val user: User): Item<GroupieViewHolder>(){
-    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.text_view_from_user_row.text = message;
-
-        Picasso.get().load(user.profileImageUrl).into(viewHolder.itemView.image_view_from_user_row)
-
-    }
-
-    override fun getLayout(): Int {
-        return R.layout.chat_from_user_row
-    }
-}
-//jedan predstavlja za poruke OD korisnika, druga KA korisniku
-class ChatToItem(val message : String, val user: User): Item<GroupieViewHolder>(){
-    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.text_view_to_user_row.text = message;
-
-        //load our user image into the star
-        Picasso.get().load(user.profileImageUrl).into(viewHolder.itemView.image_view_to_user_row)
-    }
-
-    override fun getLayout(): Int {
-        return R.layout.chat_to_user_row
-    }
-}
 

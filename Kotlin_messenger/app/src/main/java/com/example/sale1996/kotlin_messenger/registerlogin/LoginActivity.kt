@@ -8,7 +8,13 @@ import com.example.sale1996.kotlin_messenger.R
 import com.example.sale1996.kotlin_messenger.messages.LatestMessagesActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
-
+/*
+* intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+*
+* Ova linija nam govori ukoliko startujemo novu aktivnost preko Intenta, sa ovim flagovima
+* govorimo da stack aktivnosti krecemo od te aktivnosti i ako probamo back dugme na toj
+* aktivnosti mi se necemo vracati na login screen.
+* */
 class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +25,7 @@ class LoginActivity : AppCompatActivity() {
             val email = email_edittext_login.text.toString()
             val password = password_edittext_login.text.toString()
 
-            //ovako se vrsi logovanje preko Firebase
+            // Ovako se vrsi logovanje preko Firebase
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener {
                     if (!it.isSuccessful) return@addOnCompleteListener
@@ -35,8 +41,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         back_to_register_login.setOnClickListener {
-            finish()
-            //ovo finish samo vraca intent nazad
+            finish() //ovo finish samo vraca intent nazad, odnosno vraca na register screen, jer samo tako mozemo doci do ovog prozora
         }
     }
 }

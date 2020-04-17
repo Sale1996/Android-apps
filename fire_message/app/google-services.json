@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "4777529437",
+    "firebase_url": "https://sale1996firemessage.firebaseio.com",
+    "project_id": "sale1996firemessage",
+    "storage_bucket": "sale1996firemessage.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:4777529437:android:7faee978be172fc0957db4",
+        "android_client_info": {
+          "package_name": "com.example.sale1996.fire_message"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "4777529437-g4jg0damdvstgft9ekfqdh140viqm7mj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1OeMjJTWOacm5HARCcMaP3lHZlZjMJTE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "4777529437-g4jg0damdvstgft9ekfqdh140viqm7mj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
