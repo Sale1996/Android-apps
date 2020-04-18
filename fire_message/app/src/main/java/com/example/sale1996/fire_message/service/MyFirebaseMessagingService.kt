@@ -8,8 +8,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService(){
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         if(remoteMessage.notification != null){
-            //TODO: show notification
-            Log.v("FCM", "FCM message recieved!")
+            //TODO: show notification only if we are not in the chat channel from which the incoming message was sent
+
+            Log.v("FCM", remoteMessage.data.toString())
         }
     }
 }

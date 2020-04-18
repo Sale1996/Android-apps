@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sale1996.fire_message.model.ImageMessage
 import com.example.sale1996.fire_message.model.MessageType
 import com.example.sale1996.fire_message.model.TextMessage
+import com.example.sale1996.fire_message.model.User
 import com.example.sale1996.fire_message.util.FirestoreUtil
 import com.example.sale1996.fire_message.util.StorageUtil
 import com.google.firebase.auth.FirebaseAuth
@@ -28,6 +29,8 @@ private const val RC_SELECT_IMAGE = 2
 class ChatActivity : AppCompatActivity() {
 
     private lateinit var currentChannelId: String
+    private lateinit var currentUser: User
+    private lateinit var otherUserId: String
 
     private lateinit var messagesListenerRegistration: ListenerRegistration
     private var shouldInitRecyclerView = true
@@ -40,7 +43,11 @@ class ChatActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = intent.getStringExtra(AppConstants.USER_NAME)
 
-        val otherUserId = intent.getStringExtra(AppConstants.USER_ID)
+        FirestoreUtil.getCurrentUser {
+            currentUser = it
+        }
+
+        otherUserId = intent.getStringExtra(AppConstants.USER_ID)
         FirestoreUtil.getOrCreateChatChannel(otherUserId){ channelId ->
             currentChannelId = channelId
 
@@ -51,7 +58,7 @@ class ChatActivity : AppCompatActivity() {
             image_view_send.setOnClickListener {
                 //kreiraj objekat MESSAGE
                 val messageToSend = TextMessage(edit_text_message.text.toString(), Calendar.getInstance().time,
-                    FirebaseAuth.getInstance().currentUser!!.uid, MessageType.TEXT)
+                    FirebaseAuth.getInstance().currentUser!!.uid, otherUserId, currentUser.name)
                 //brisemo sadrzaj iz edittext polja
                 edit_text_message.setText("")
                 FirestoreUtil.sendMessage(messageToSend, channelId)
@@ -85,7 +92,7 @@ class ChatActivity : AppCompatActivity() {
                 //kada smo uplodali sliku, mozemo da napravimo poruku i posaljemo i nju
                 val messageToSend=
                     ImageMessage(imagePath, Calendar.getInstance().time,
-                        FirebaseAuth.getInstance().currentUser!!.uid)
+                        FirebaseAuth.getInstance().currentUser!!.uid, otherUserId, currentUser.name)
                 FirestoreUtil.sendMessage(messageToSend, currentChannelId)
             }
 
