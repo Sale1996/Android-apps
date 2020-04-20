@@ -9,6 +9,8 @@ import org.jetbrains.anko.startActivity
 * Ova aktivnost ide skroz na pocetku i proverava da li je korisnik vec ulogovan,
 * ako jeste onda skacemo na pocetni ekran, ako nije onda skacemo na login screen
 *
+* startActivity<MainActivity> je samo skracena verzija pozivanja aktivnosti preko
+* anko biblioteke
 * */
 class SplashActivity : AppCompatActivity() {
 
@@ -16,7 +18,6 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         if(FirebaseAuth.getInstance().currentUser == null){
-            //funkcija od anko
             startActivity<SignInActivity>()
         }
         else{

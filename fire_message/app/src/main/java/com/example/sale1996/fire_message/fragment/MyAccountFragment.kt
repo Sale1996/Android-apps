@@ -35,10 +35,10 @@ class MyAccountFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_my_account, container, false)
 
         view.apply {
+
             imageView_profile_picture.setOnClickListener{
                 val intent = Intent().apply {
                     type = "image/*"
@@ -49,12 +49,16 @@ class MyAccountFragment : Fragment() {
             }
 
             btn_save.setOnClickListener{
+                // ovo je fora kako mozemo pitati da li je lateinit inicijalizovan
                 if(::selectedImageBytes.isInitialized){
-                    //znaci ako smo postavili sliku...
-                    //onda cemo uplodovati sliku na storage util..
+                    /*
+                    * Ukoliko je nova slika postavljena, cuvamo je na firestore
+                    * */
                     StorageUtil.uploadProfilePhoto(selectedImageBytes) { imagePath ->
-                        //kada smo uspesno ubacili sliku, dobijamo imagePath nazad
-                        //pa cemo da sacuvamo korisnika
+                        /*
+                        * Sa prosledjenim imagePath-om updejtamo korisnikov nalog
+                        * da bi imali informaciju koja je njegova sliku u moru slika
+                        * */
                         FirestoreUtil.updateCurrentUser(editText_name.text.toString(),
                             editText_bio.text.toString(), imagePath)
                     }
@@ -67,13 +71,14 @@ class MyAccountFragment : Fragment() {
                 toast("Saving")
             }
 
-            //I dodajemo lisener da se izlogujemo lepo
             btn_sign_out.setOnClickListener {
                 AuthUI.getInstance()
                     .signOut(requireContext())
                     .addOnCompleteListener {
-                        //nakon uspesnog izlogovanja, vracamo se na signIn aktivity i brisemo sve sa steka,
-                        //kako ne bi mogli sa back da se vratimo na main screen
+                        /*
+                         * nakon uspesnog izlogovanja, vracamo se na signIn aktivity i brisemo sve sa steka,
+                         * kako ne bi mogli sa back da se vratimo na main screen
+                         */
                         startActivity(intentFor<SignInActivity>().newTask().clearTask())
                     }
             }
@@ -83,19 +88,24 @@ class MyAccountFragment : Fragment() {
         return view
     }
 
+    /*
+    * U ovom onActivityResult ce se hanldati prikupljanjem podataka o slici...
+    *
+    * */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        //data predstavlja intent, a data.data predstavlja sadrzinu intenta
+        // data predstavlja intent, a data.data predstavlja sadrzinu intenta
         if(requestCode == RC_SELECT_IMAGE && resultCode == Activity.RESULT_OK &&
                 data != null && data.data != null){
+
+            // Obrada slike iz dostiglog intenta
             val selectedImagePath = data.data
             val selectedImageBmp = MediaStore.Images.Media
                 .getBitmap(activity?.contentResolver, selectedImagePath)
-
             val outputStream = ByteArrayOutputStream()
             selectedImageBmp.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
             selectedImageBytes = outputStream.toByteArray()
 
-            //TODO: Load picture first time.. onda ne ide iz firebase nego direktno ubacujemo
+            //I kad je smenio, daj odma da postavimo u imageView
             GlideApp.with(this)
                 .load(selectedImageBytes)
                 .into(imageView_profile_picture)
@@ -113,8 +123,13 @@ class MyAccountFragment : Fragment() {
                 editText_name.setText(user.name)
                 editText_bio.setText(user.bio)
                 if(!pictureJustChanged && user.profilePicturePath != null){
-                    //Sada postavljamo sliku sa FIREBASE-a u imageView! Zato nam je trebala ona Glide
-                    //klasa!
+                    /*
+                    * Sada postavljamo korisnikovu sliku sa firebase baze.
+                    * Da bi to omogucili morali smo napraviti metodu unutar
+                    * StorageUtil objekta. Posto nama je potrebna referenca od firestore-a
+                    * a nju moramo sami da nadjemo preko profilePicturePath-a koji se nalazi
+                    * u user objektu
+                    * */
                     GlideApp.with(this)
                         .load(StorageUtil.pathToReference(user.profilePicturePath)) //zato je pisana metoda ona
                         .placeholder(R.drawable.ic_account_circle_black_24dp)

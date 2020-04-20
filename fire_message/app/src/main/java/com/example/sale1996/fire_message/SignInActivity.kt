@@ -9,9 +9,7 @@ import com.example.sale1996.fire_message.util.FirestoreUtil
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.iid.InstanceIdResult
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import org.jetbrains.anko.clearTask
 import org.jetbrains.anko.design.longSnackbar
@@ -24,7 +22,7 @@ class SignInActivity : AppCompatActivity() {
 
     private val RC_SIGN_IN = 1
 
-    // pravimo kako hocemo da nam izgleda UI od firebase
+    // provajdujemo firebase sa potrebnim podacima o logovanju korisnika (sto mi zelimo da nam se prikaze)
     private val signInProviders =
         listOf(AuthUI.IdpConfig.EmailBuilder()
             .setAllowNewAccounts(true)
@@ -45,6 +43,12 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
+    /*
+    * IdpResponse je firebase auth interfejs/klasa koja nam omogucuje da izvucemo odgovor firebase-a
+    * nakon logovanja
+    *
+    *
+    * */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -59,17 +63,18 @@ class SignInActivity : AppCompatActivity() {
                 FirestoreUtil.initCurrentUserIfFirstTime {
                     startActivity(intentFor<MainActivity>().newTask().clearTask())
 
-                    //ovde sada kupimo token i prosledjujemo ga u firebase!
-                    FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(
-                        this,
-                        OnSuccessListener<InstanceIdResult> { instanceIdResult ->
-                            val userToken = instanceIdResult.token
-                            MyFirebaseInstanceIDService.addTokenToFirestore(userToken)
-                        })
+                    /*
+                    * Ovde preuzimamo token od ulogovanog korisnika i prosledjujemo ga nasoj
+                    * funkciji sa servisa MyFirebaseInstanceIDService...
+                    * */
+                    FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) {
+                            instanceIdResult ->
+
+                        val userToken = instanceIdResult.token
+                        MyFirebaseInstanceIDService.addTokenToFirestore(userToken)
+                    }
                     progressDialog.dismiss()
                 }
-
-
             }
             else if (resultCode == Activity.RESULT_CANCELED) {
                 if (response == null) return

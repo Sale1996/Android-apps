@@ -29,10 +29,18 @@ object FirestoreUtil {
     // ovde imamo referencu na sve chatove korisnika...
     private val chatChannelsCollectionRef = firestoreInstance.collection("chatChannels")
 
-    //Kao parametar prima funkciju onComplete koja kao povratnu vrednost vraca void (Unit)
+    /*
+    * onComplete kao parametar funkcije nam govori da onaj ko poziva tu funkciju
+    * moze da je produzi sa {} i uradi nesto nakon vracanja rezultata funkcije...
+    * Da je onComplete imao parametar onda bi taj parametar bio povratna vrednost funcije
+    * i pristupali bi mu sa:
+    *   initCurrentuserIfFirstTime(){ parametar ->
+    *
+    *   }
+    * */
     fun initCurrentUserIfFirstTime(onComplete: () -> Unit){
         currentUserDocRef.get().addOnSuccessListener { documentSnapshot ->
-            // Ako korisnika nema u bazi onda ga dodaj
+            // Ako nema cvora (dokumenta) sa nasim korisnikom onda dodaj novog
             if(!documentSnapshot.exists()){
                 val newUser = User(FirebaseAuth.getInstance().currentUser?.displayName ?: "",
                     "",null, mutableListOf())
@@ -43,6 +51,7 @@ object FirestoreUtil {
                 }
             }
             else{
+                //korisnik vec postoji, stoga zavrsavamo uspesno funkciju
                 onComplete()
             }
         }
@@ -80,6 +89,7 @@ object FirestoreUtil {
                     return@addSnapshotListener
                 }
 
+                //Item predstavlja listu PersonItem view-a
                 val items = mutableListOf<Item<GroupieViewHolder>>()
                 querySnapshot?.documents?.forEach {
                     if (it.id != FirebaseAuth.getInstance().currentUser?.uid)
@@ -91,7 +101,7 @@ object FirestoreUtil {
 
     fun removeListener(registration: ListenerRegistration) = registration.remove()
 
-    //ova funkcija kao rezultat poziva onComplete funkciju i prosledjuje joj channelId
+    // Ova funkcija kao rezultat poziva onComplete funkciju i prosledjuje joj channelId
     fun getOrCreateChatChannel(otherUserId: String,
                                onComplete: (channelId: String) -> Unit){
         currentUserDocRef.collection("engagedChatChannels")
@@ -102,7 +112,7 @@ object FirestoreUtil {
                     return@addOnSuccessListener
                 }
 
-                //ako ne postoji, vracamo nazad...
+                //ako ne postoji, kreiramo
                 val currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
 
                 // prvo pravimo channel, pa kada dobijemo ID od njega, ubacujemo u cvor korisnika

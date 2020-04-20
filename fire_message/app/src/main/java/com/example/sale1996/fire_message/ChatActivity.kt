@@ -41,14 +41,21 @@ class ChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = intent.getStringExtra(AppConstants.USER_NAME)
+        supportActionBar?.title = intent.getStringExtra(AppConstants.USER_NAME) //ispisi chatPartnera ime
+
 
         FirestoreUtil.getCurrentUser {
             currentUser = it
         }
-
         otherUserId = intent.getStringExtra(AppConstants.USER_ID)
+
+
+        /*
+        * Ovde definisemo message listener za dobijeni chat channel,
+        * postavljamo listener za slanje poruke i listener za slanje slike
+        * */
         FirestoreUtil.getOrCreateChatChannel(otherUserId){ channelId ->
+
             currentChannelId = channelId
 
             messagesListenerRegistration =
@@ -82,6 +89,7 @@ class ChatActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == RC_SELECT_IMAGE && resultCode == Activity.RESULT_OK &&
                 data != null && data.data != null){
+
             val selectedImagePath = data.data
             val selectedImageBmp = MediaStore.Images.Media.getBitmap(contentResolver, selectedImagePath)
             val outputStream = ByteArrayOutputStream()

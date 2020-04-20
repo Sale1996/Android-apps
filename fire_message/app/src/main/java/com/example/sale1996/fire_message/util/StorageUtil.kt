@@ -9,13 +9,14 @@ object StorageUtil {
 
     private val storageInstance: FirebaseStorage by lazy { FirebaseStorage.getInstance() }
 
-    //sad instanciramo cvor..
+    //instanciramo cvor prilikom kreiranja ovog objekta, cvor predstavlja naseg logovanog korisnika
     private val currentUserRef: StorageReference
         get() = storageInstance.reference
             .child(FirebaseAuth.getInstance().uid ?: throw NullPointerException("UDI is null."))
 
     fun uploadProfilePhoto(imageBytes: ByteArray,
                            onSuccess: (imagePath: String) -> Unit){
+        // postavljamo sliku u cvor sa SVIM slikama korisnika!
         val ref = currentUserRef.child("profilePictures/${UUID.nameUUIDFromBytes(imageBytes)}")
         // postavljamo sliku
         ref.putBytes(imageBytes)

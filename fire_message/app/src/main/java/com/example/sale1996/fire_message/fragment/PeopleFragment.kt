@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sale1996.fire_message.AppConstants
 import com.example.sale1996.fire_message.ChatActivity
-
 import com.example.sale1996.fire_message.R
 import com.example.sale1996.fire_message.recyclerview.item.PersonItem
 import com.example.sale1996.fire_message.util.FirestoreUtil
@@ -19,12 +18,15 @@ import kotlinx.android.synthetic.main.fragment_people.*
 
 class PeopleFragment : Fragment() {
 
-    // ovo cemo koristiti za firestore listener kako bi ga sacuvali
-    // i onda kada se neko novi registruje mi cemo dodati u listu svih korisnika
+    /*
+    * Preko ovog listenera mi cemo da prisluskujemo firebase i cim se
+    * neko registruje mi cemo znati.
+    * */
     private lateinit var userListenerRegistration: ListenerRegistration
 
     private var shouldInitRecyclerView = true
 
+    // Grupie klasa sa kojom mozemo grupisati liste objekata u nekakve sekcije
     private lateinit var peopleSection: Section
 
 
@@ -33,6 +35,17 @@ class PeopleFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        /*
+        * Kao sto se vidi postoji 2 nacina na koji mozemo da prosledimo funkciju kao parametar u
+        * drugu funkciju. Prvi nacin da se ubace ostali neophodni parametri a da se nasa funkcija
+        * deklarise na sledeci nacin:
+        *   FirestoreUtil.addUsersListener(this.requireActivity()){ parametarProsledjeneFunkcije ->
+        *       telo te funkcije
+        *  }
+        *
+        * Ili da se pozove na drugi nacin, kao sto je ispod uradjeno... ukoliko zelimo da odvojimo
+        * telo funkcije da bi bilo preglednije...
+        * */
         userListenerRegistration =
             FirestoreUtil.addUsersListener(this.requireActivity(), this::updateRecyclerView)
 
@@ -54,6 +67,7 @@ class PeopleFragment : Fragment() {
             shouldInitRecyclerView = false
         }
 
+        // Ako je update ondak ce sekcija vrv updejtati samo one koji su neophodni...
         fun updateItems() = peopleSection.update(items)
 
         if(shouldInitRecyclerView) init()
@@ -72,7 +86,6 @@ class PeopleFragment : Fragment() {
             val intent = Intent(activity, ChatActivity::class.java)
             intent.putExtra(AppConstants.USER_NAME, item.person.name)
             intent.putExtra(AppConstants.USER_ID, item.userId)
-
             startActivity(intent)
         }
     }

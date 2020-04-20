@@ -19,7 +19,7 @@ class MyFirebaseInstanceIDService : FirebaseMessagingService(){
         super.onNewToken(p0)
         val newRegistrationToken = p0
 
-        //sada svaki put kad se refresha token mi ovde pozivamo onNEwTOken funkciju...
+        //sada svaki put kad se refresha token mi ovde pozivamo onNewToken funkciju...
         //ali tu postoji problem, jer korisnik ne mora biti ulogovan kada se ova funkcija porkene..
         //ona moze da se pokrene i prvi put kada je instalirana aplikacija....
         if (FirebaseAuth.getInstance().currentUser != null)
@@ -29,6 +29,10 @@ class MyFirebaseInstanceIDService : FirebaseMessagingService(){
     }
 
     companion object {
+        /*
+        * Jedan nalog moze da bude logovan na vise uredjaja, stoga je tu postoji
+        * povratna vrednost od liste tokena.
+        * */
         fun addTokenToFirestore(newRegistrationToken: String?){
             if(newRegistrationToken == null) throw NullPointerException("FCM token is null.")
 
