@@ -14,7 +14,7 @@ data class CurrentWeather(
     val humidity: Int,
     @SerializedName("observation_time")
     val observationTime: String,
-    val precip: Int,
+    val precip: Float,
     val pressure: Int,
     val temperature: Int,
     @SerializedName("uv_index")

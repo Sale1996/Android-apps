@@ -16,7 +16,7 @@ data class UniLocalizedUnitWeatherEntry(
     @ColumnInfo(name = "observationTime")
     override val observationTime: String,
     @ColumnInfo(name = "precip")
-    override val precip: Int,
+    override val precip: Float,
     @ColumnInfo(name = "pressure")
     override val pressure: Int,
     @ColumnInfo(name = "temperature")
