@@ -11,24 +11,27 @@ import org.threeten.bp.ZonedDateTime
 const val WEATHER_LOCATION_ID = 0
 
 @Entity(tableName = "weather_location")
-data class WeatherLocation(
+data class Location(
+    val country: String,
+    val lat: String,
+    val localtime: String,
+    @SerializedName("localtime_epoch")
+    val localtimeEpoch: Long,
+    val lon: String,
     val name: String,
     val region: String,
-    val country: String,
-    val lat: Double,
-    val lon: Double,
-    @SerializedName("tz_id")
-    val tzId: String,
-    @SerializedName("localtime_epoch")
-    val localtimeEpoch: Long
-) {
+    @SerializedName("timezone_id")
+    val timezoneId: String,
+    @SerializedName("utc_offset")
+    val utcOffset: String
+){
     @PrimaryKey(autoGenerate = false)
     var id: Int = WEATHER_LOCATION_ID
 
     val zonedDateTime: ZonedDateTime
         get() {
             val instant = Instant.ofEpochSecond(localtimeEpoch)
-            val zoneId = ZoneId.of(tzId)
+            val zoneId = ZoneId.of(timezoneId)
             return ZonedDateTime.ofInstant(instant, zoneId)
         }
 }

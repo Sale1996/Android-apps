@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import com.example.sale1996.forecastmvvm.data.db.CurrentWeatherDao
 import com.example.sale1996.forecastmvvm.data.db.unitlocalized.UnitSpecificCurrentWeatherEntry
 import com.example.sale1996.forecastmvvm.data.network.WeatherNetworkDataSource
-import com.example.sale1996.forecastmvvm.data.network.response.CurrentWeatherResponse
+import com.example.sale1996.forecastmvvm.data.network.response.CurrentAPIWeatherResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -26,6 +26,9 @@ class ForecastRepositoryImpl(
         //onda ce se unistiti i repository kao i njegov observe
         weatherNetworkDataSource.downloadedCurrentWeather.observeForever { newCurrentWeather ->
             //persist
+            GlobalScope.launch(Dispatchers.IO) {
+                currentWeatherDao.upsert(newCurrentWeather.currentWeather)
+            }
         }
     }
 
@@ -42,12 +45,11 @@ class ForecastRepositoryImpl(
         * */
         return withContext(Dispatchers.IO) {
             initWeatherData()
-            return@withContext if (metric) currentWeatherDao.getWeatherMetric()
-            else currentWeatherDao.getWeatherImperial()
+            return@withContext currentWeatherDao.getWeather()
         }
     }
 
-    private fun persistFetchedCurrentWeather(fetchedWeather: CurrentWeatherResponse){
+    private fun persistFetchedCurrentWeather(fetchedWeather: CurrentAPIWeatherResponse){
         /*
         * Spomenuli smo da treba izbegavati GlobalScope.. ali kod repozitorijuma nije to slucaj
         * jer on nema svoj lifecycle... da smo kod fragmenta pokrenuli asihroni poziv i npr u medjuvremenu
@@ -55,7 +57,7 @@ class ForecastRepositoryImpl(
         * ali u ovom slucaju posto repository nema svoj lifecycle nece doci do toga...
         * */
         GlobalScope.launch(Dispatchers.IO) {
-            currentWeatherDao.upsert(fetchedWeather.currentWeatherEntry)
+            currentWeatherDao.upsert(fetchedWeather.currentWeather)
         }
     }
 
@@ -75,8 +77,8 @@ class ForecastRepositoryImpl(
         * auzirati ovde jer ga osluskujemo...
         * */
         weatherNetworkDataSource.fetchCurrentWeather(
-            "Los Angeles",
-            Locale.getDefault().language //ovo smo uzeli lokal sa telefona...
+            "Srbobran",
+            " " + Locale.getDefault().language //ovo smo uzeli lokal sa telefona...
         )
     }
 

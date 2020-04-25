@@ -1,6 +1,6 @@
 package com.example.sale1996.forecastmvvm.data.network
 
-import com.example.sale1996.forecastmvvm.data.network.response.CurrentWeatherResponse
+import com.example.sale1996.forecastmvvm.data.network.response.CurrentAPIWeatherResponseWithArrays
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
@@ -27,11 +27,11 @@ interface ApixuWeatherApiService {
     * on ce zaustaviti ovo njegovo da saceka zahtev, ali dalje sve ostalo moze da radi
     * asihronizovano.. kada dodje zahtev, on se otpuca i nastavi svoje...
     * */
-    @GET("current.json")
+    @GET("current")
     fun getCurrentWeather(
-        @Query("q") location: String,
-        @Query("lang") languageCode: String = "en"
-    ): Deferred<CurrentWeatherResponse>
+        @Query("query") location: String,
+        @Query("language ") languageCode: String = " en"
+    ): Deferred<CurrentAPIWeatherResponseWithArrays>
 
 
     /*

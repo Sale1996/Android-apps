@@ -1,11 +1,11 @@
 package com.example.sale1996.forecastmvvm.data.network
 
 import androidx.lifecycle.LiveData
-import com.example.sale1996.forecastmvvm.data.network.response.CurrentWeatherResponse
+import com.example.sale1996.forecastmvvm.data.network.response.CurrentAPIWeatherResponse
 
 interface WeatherNetworkDataSource {
 
-    val downloadedCurrentWeather: LiveData<CurrentWeatherResponse>
+    val downloadedCurrentWeather: LiveData<CurrentAPIWeatherResponse>
     /*
     * Ova funkcija je ekvivaletna onoj u ApixuWeatherApiService (getCurrentWeather)
     * stim da mi ovde ne vracamo direktno vrednost nego ce ova funkcija
@@ -17,4 +17,5 @@ interface WeatherNetworkDataSource {
         location: String,
         languageCode: String
     )
+
 }

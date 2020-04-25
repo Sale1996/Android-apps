@@ -5,11 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.sale1996.forecastmvvm.data.db.CurrentWeatherDao
-import com.example.sale1996.forecastmvvm.data.db.entity.CurrentWeatherEntry
+import com.example.sale1996.forecastmvvm.data.db.entity.CurrentWeather
 
 @Database(
-    entities = [CurrentWeatherEntry::class],
-    version = 1
+    entities = [CurrentWeather::class],
+    version = 2
 )
 abstract class ForecastDatabase: RoomDatabase() {
     /*
@@ -40,6 +40,7 @@ abstract class ForecastDatabase: RoomDatabase() {
         private fun buildDatabase(context: Context) =
             Room.databaseBuilder(context.applicationContext,
                 ForecastDatabase::class.java, "forecast.db")
+                .fallbackToDestructiveMigration()
                 .build()
     }
 
