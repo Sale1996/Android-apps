@@ -27,13 +27,17 @@ class WeatherNetworkDataSourceImpl(
         get() = _downloadedCurrentWeather
 
 
-    override suspend fun fetchCurrentWeather(location: String, languageCode: String) {
+    override suspend fun fetchCurrentWeather(
+        location: String,
+        languageCode: String,
+        units: String
+    ) {
         try {
             /*
             * Ovde dobavljamo podatke sa API-a
             * */
             val fetchedCurrentWeather = apixuWeatherApiService
-                .getCurrentWeather(location, languageCode)
+                .getCurrentWeather(location, languageCode, units)
                 .await()
 
             //ovde vrsimo transformaciju array objekata u string

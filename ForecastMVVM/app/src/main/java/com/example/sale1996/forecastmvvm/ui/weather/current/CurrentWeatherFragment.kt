@@ -83,12 +83,20 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware{
     //dovoljno je launch..
     private fun bindUI() = launch{
         val currentWeather = viewModel.weather.await()
+
+        //dobijanje i lokacije pored trenutne vremenske prognoze
+        val weatherLocation = viewModel.weatherLocation.await()
+
+        weatherLocation.observe(viewLifecycleOwner, Observer { location ->
+            if(location == null)  return@Observer
+            updateLocation(location.name)
+        })
+
         currentWeather.observe(viewLifecycleOwner, Observer {
             if(it == null) return@Observer
 
             //sakrivamo loading view-e
             group_loading.visibility = View.GONE
-            updateLocation("Srbobran")
             updateDateToToday()
             updateTemperatures(it.temperature, it.feelslike)
             updateCondition(it.weatherDescriptions)

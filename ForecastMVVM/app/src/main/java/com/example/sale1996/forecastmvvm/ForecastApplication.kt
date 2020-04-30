@@ -1,8 +1,13 @@
 package com.example.sale1996.forecastmvvm
 
 import android.app.Application
+import androidx.preference.PreferenceManager
 import com.example.sale1996.forecastmvvm.data.ForecastDatabase
 import com.example.sale1996.forecastmvvm.data.network.*
+import com.example.sale1996.forecastmvvm.data.provider.LocationProvider
+import com.example.sale1996.forecastmvvm.data.provider.LocationProviderImpl
+import com.example.sale1996.forecastmvvm.data.provider.UnitProvider
+import com.example.sale1996.forecastmvvm.data.provider.UnitProviderImpl
 import com.example.sale1996.forecastmvvm.data.repository.ForecastRepository
 import com.example.sale1996.forecastmvvm.data.repository.ForecastRepositoryImpl
 import com.example.sale1996.forecastmvvm.ui.weather.current.CurrentWeatherViewModelFactory
@@ -31,17 +36,24 @@ class ForecastApplication: Application(), KodeinAware {
         //kada pozivamo instance<ForecastDatabase>() on ce pozvati iznad liniju i ubaciti na to mesto
         //instanciranu bazu
         bind() from singleton { instance<ForecastDatabase>().currentWeatherDao() }
+        bind() from singleton { instance<ForecastDatabase>().weatherLocationDao() }
         bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }
         bind() from singleton {ApixuWeatherApiService(instance())}
         bind<WeatherNetworkDataSource>() with singleton { WeatherNetworkDataSourceImpl(instance())}
-        bind<ForecastRepository>() with singleton {ForecastRepositoryImpl(instance(), instance())}
+        bind<LocationProvider>() with singleton { LocationProviderImpl() }
+
+        bind<ForecastRepository>() with singleton {ForecastRepositoryImpl(instance(), instance(), instance(), instance())}
+        bind<UnitProvider>() with singleton { UnitProviderImpl(instance())}
         //posto factory nema svoj repository pisemo ovako.. a from provider znaci da prilikom
         //svakog novog bindovanja mi dobijamo novu instancu te fabrike
-        bind() from provider { CurrentWeatherViewModelFactory(instance()) }
+        bind() from provider { CurrentWeatherViewModelFactory(instance(), instance()) }
     }
 
     override fun onCreate(){
         super.onCreate()
         AndroidThreeTen.init(this)
+
+        //sa linijom ispod namestamo cim se app pokrene defaultne vrednosti
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
     }
 }

@@ -5,11 +5,13 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.sale1996.forecastmvvm.data.db.CurrentWeatherDao
+import com.example.sale1996.forecastmvvm.data.db.WeatherLocationDao
 import com.example.sale1996.forecastmvvm.data.db.entity.CurrentWeather
+import com.example.sale1996.forecastmvvm.data.db.entity.Location
 
 @Database(
-    entities = [CurrentWeather::class],
-    version = 3
+    entities = [CurrentWeather::class, Location::class],
+    version = 4
 )
 abstract class ForecastDatabase: RoomDatabase() {
     /*
@@ -18,6 +20,7 @@ abstract class ForecastDatabase: RoomDatabase() {
     * */
 
     abstract fun currentWeatherDao(): CurrentWeatherDao
+    abstract fun weatherLocationDao(): WeatherLocationDao
 
     companion object{
         //volatile znaci da sve niti mogu pristupati ovoj instanci

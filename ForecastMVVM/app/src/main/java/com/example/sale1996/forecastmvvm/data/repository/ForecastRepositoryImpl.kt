@@ -2,9 +2,13 @@ package com.example.sale1996.forecastmvvm.data.repository
 
 import androidx.lifecycle.LiveData
 import com.example.sale1996.forecastmvvm.data.db.CurrentWeatherDao
+import com.example.sale1996.forecastmvvm.data.db.WeatherLocationDao
+import com.example.sale1996.forecastmvvm.data.db.entity.Location
+import com.example.sale1996.forecastmvvm.data.db.unitlocalized.UniLocalizedUnitWeatherEntry
 import com.example.sale1996.forecastmvvm.data.db.unitlocalized.UnitSpecificCurrentWeatherEntry
 import com.example.sale1996.forecastmvvm.data.network.WeatherNetworkDataSource
 import com.example.sale1996.forecastmvvm.data.network.response.CurrentAPIWeatherResponse
+import com.example.sale1996.forecastmvvm.data.provider.LocationProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -18,6 +22,8 @@ import java.util.*
 * */
 class ForecastRepositoryImpl(
     private val currentWeatherDao: CurrentWeatherDao,
+    private val weatherLocationDao: WeatherLocationDao,
+    private val locationProvider: LocationProvider,
     private val weatherNetworkDataSource: WeatherNetworkDataSource
 ) : ForecastRepository {
 
@@ -26,9 +32,10 @@ class ForecastRepositoryImpl(
         //onda ce se unistiti i repository kao i njegov observe
         weatherNetworkDataSource.downloadedCurrentWeather.observeForever { newCurrentWeather ->
             //persist
-            GlobalScope.launch(Dispatchers.IO) {
-                currentWeatherDao.upsert(newCurrentWeather.currentWeather)
-            }
+            persistFetchedCurrentWeather(newCurrentWeather)
+//            GlobalScope.launch(Dispatchers.IO) {
+//                currentWeatherDao.upsert(newCurrentWeather.currentWeather)
+//            }
         }
     }
 
@@ -44,11 +51,21 @@ class ForecastRepositoryImpl(
         * GlobalScope jeste sto withContext vraca povratnu vrednost, dok GlobalScope ne vraca...
         * */
         return withContext(Dispatchers.IO) {
-            initWeatherData()
+            initWeatherData(metric)
             return@withContext currentWeatherDao.getWeather()
         }
     }
 
+
+    override suspend fun getWeatherLocation(): LiveData<Location> {
+        return withContext(Dispatchers.IO){
+            return@withContext weatherLocationDao.getLocation()
+        }
+    }
+
+    /*
+    * metoda koja cuva response u bazu
+    * */
     private fun persistFetchedCurrentWeather(fetchedWeather: CurrentAPIWeatherResponse){
         /*
         * Spomenuli smo da treba izbegavati GlobalScope.. ali kod repozitorijuma nije to slucaj
@@ -58,17 +75,24 @@ class ForecastRepositoryImpl(
         * */
         GlobalScope.launch(Dispatchers.IO) {
             currentWeatherDao.upsert(fetchedWeather.currentWeather)
+            weatherLocationDao.upsert(fetchedWeather.location)
         }
     }
 
-    private suspend fun initWeatherData(){
-        //ovo je namerno napravljeno da se uvek poziva, za sad
-        if(isFetchCurrentNeeded(ZonedDateTime.now().minusHours(1))){
-            fetchCurrentWeather()
+    private suspend fun initWeatherData(isMetric: Boolean){
+        val lastWeatherLocation = weatherLocationDao.getLocation().value
+
+        if(lastWeatherLocation == null || locationProvider.hasLocationChanged(lastWeatherLocation)){
+            fetchCurrentWeather(isMetric)
+            return
+        }
+        //proverava vreme od zadnjeg poziva da li je potreban fetch
+        if(isFetchCurrentNeeded(lastWeatherLocation.zonedDateTime)){
+            fetchCurrentWeather(isMetric)
         }
     }
 
-    private suspend fun fetchCurrentWeather(){
+    private suspend fun fetchCurrentWeather(isMetric: Boolean){
         /*
         * Primeti da ovde nema povratne vrednosti.. jer nam nije ni potrebno..
         * ovde pozivamo fetchCurrentWeather od networkDataSource-a i prosledjujemo
@@ -76,9 +100,14 @@ class ForecastRepositoryImpl(
         * i posto smo se mi subscribovali na taj mutablelivedata nama ce se to automatski
         * auzirati ovde jer ga osluskujemo...
         * */
+        var units = " m"
+        if(isMetric){
+            units = " i"
+        }
         weatherNetworkDataSource.fetchCurrentWeather(
-            "Srbobran",
-            " " + Locale.getDefault().language //ovo smo uzeli lokal sa telefona...
+            locationProvider.getPreferredLocationString(), //tu prosledjujemo srbobran...
+            " " + Locale.getDefault().language,//ovo smo uzeli lokal sa telefona...
+             units
         )
     }
 
