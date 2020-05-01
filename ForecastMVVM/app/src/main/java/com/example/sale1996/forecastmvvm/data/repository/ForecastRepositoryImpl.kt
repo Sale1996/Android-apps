@@ -3,8 +3,7 @@ package com.example.sale1996.forecastmvvm.data.repository
 import androidx.lifecycle.LiveData
 import com.example.sale1996.forecastmvvm.data.db.CurrentWeatherDao
 import com.example.sale1996.forecastmvvm.data.db.WeatherLocationDao
-import com.example.sale1996.forecastmvvm.data.db.entity.Location
-import com.example.sale1996.forecastmvvm.data.db.unitlocalized.UniLocalizedUnitWeatherEntry
+import com.example.sale1996.forecastmvvm.data.db.entity.WeatherLocation
 import com.example.sale1996.forecastmvvm.data.db.unitlocalized.UnitSpecificCurrentWeatherEntry
 import com.example.sale1996.forecastmvvm.data.network.WeatherNetworkDataSource
 import com.example.sale1996.forecastmvvm.data.network.response.CurrentAPIWeatherResponse
@@ -57,7 +56,7 @@ class ForecastRepositoryImpl(
     }
 
 
-    override suspend fun getWeatherLocation(): LiveData<Location> {
+    override suspend fun getWeatherLocation(): LiveData<WeatherLocation> {
         return withContext(Dispatchers.IO){
             return@withContext weatherLocationDao.getLocation()
         }

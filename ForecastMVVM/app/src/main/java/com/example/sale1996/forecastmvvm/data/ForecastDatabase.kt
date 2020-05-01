@@ -7,10 +7,10 @@ import androidx.room.RoomDatabase
 import com.example.sale1996.forecastmvvm.data.db.CurrentWeatherDao
 import com.example.sale1996.forecastmvvm.data.db.WeatherLocationDao
 import com.example.sale1996.forecastmvvm.data.db.entity.CurrentWeather
-import com.example.sale1996.forecastmvvm.data.db.entity.Location
+import com.example.sale1996.forecastmvvm.data.db.entity.WeatherLocation
 
 @Database(
-    entities = [CurrentWeather::class, Location::class],
+    entities = [CurrentWeather::class, WeatherLocation::class],
     version = 4
 )
 abstract class ForecastDatabase: RoomDatabase() {

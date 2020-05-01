@@ -11,7 +11,7 @@ import org.threeten.bp.ZonedDateTime
 const val WEATHER_LOCATION_ID = 0
 
 @Entity(tableName = "weather_location")
-data class Location(
+data class WeatherLocation(
     val country: String,
     val lat: String,
     val localtime: String,
